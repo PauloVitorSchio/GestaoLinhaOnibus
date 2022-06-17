@@ -1,4 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
+import modelos.Onibus.Onibus;
+import modelos.Usuario.Usuario;
+import java.io.IOException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -8,20 +14,100 @@ import java.awt.image.BufferedImage;
  */
 public class menu_onibus {
 
-    public static void main(String[] args) {
-        Scanner teclado = new Scanner(System.in);
-        print_Menu();
-        System.out.println("-------------------------------------------------");
-        // pede cpf e senha
-        System.out.println("Digite o CPF: ");
-        int cpf = teclado.nextInt();
-        System.out.println("Digite a senha: ");
-        String senha = teclado.nextLine();
-        System.out.println("-------------------------------------------------");
-        confere_login(cpf, senha);
+    static Scanner teclado = new Scanner(System.in);
 
-        // se login e senha conferem direciona para menu de clientes ou para menu de
-        // funcionários
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        print_Menu();
+
+        
+        List<Usuario> usuarios = new ArrayList<Usuario>();
+
+        int opc;
+        boolean flag = true;
+        while (flag) {
+            System.out.println("\n");
+            System.out.println(
+                    "*******************************************************************************************************************************************************************************\n"
+                            + "                                                                          Escolha uma opção:\n"
+                            + "                                                                          0 - Sair do Sistema \n"
+                            + "                                                                         1 - Cadastrar Usuario\n"
+                            + "                                                                         2 - Listar Usuarios\n"
+                            + "                                                                         3 - Linha Biopark/Toledo\n"
+                            + "                                                                         4 - Linha Toledo/Cascavel\n"
+                            + "*******************************************************************************************************************************************************************************\n");
+
+            opc = Integer.parseInt(teclado.nextLine());
+
+            switch (opc) {
+                case 0:
+                    limpaConsole();
+                    System.out.println("Saindo do Sistema...");
+                    return;
+                case 1:
+                    limpaConsole();
+                    cadastrarUsuario(usuarios);
+                    break;
+                case 2:
+                    limpaConsole();
+                    listarUsuarios(usuarios);
+                    break;
+                case 3:
+                    limpaConsole();
+                    menu(1);
+                    break;
+                case 4:
+                    limpaConsole();
+                    menu(2);
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+                    return;
+            }
+        }
+    }
+
+    public static void menu(int linha) throws IOException, InterruptedException {
+        Onibus onibus = new Onibus();
+        int opcao;
+
+        while (true) {
+            System.out.println("\n");
+            System.out.println(
+                    "*******************************************************************************************************************************************************************************\n"
+                            + "                                                                          Escolha uma opção:\n"
+                            + "                                                                          0 - Sair do Sistema \n"
+                            + "                                                                         1 - Ver Assentos Disponíveis\n"
+                            + "                                                                         2 - Reservar Assento\n"
+                            + "                                                                         3 - Comprar Assento\n"
+                            + "                                                                         4 - Cancelar Reserva\n"
+                            + "*******************************************************************************************************************************************************************************\n");
+
+            opcao = Integer.parseInt(teclado.nextLine());
+
+            switch (opcao) {
+                case 0:
+                    limpaConsole();
+                    return;
+                case 1:
+                    limpaConsole();
+                    onibus.verAssentosDisponiveis();
+                    break;
+                case 2:
+                    limpaConsole();
+                    onibus.reservarAssento();
+                    break;
+                case 3:
+                    limpaConsole();
+                    onibus.comprarAssento();
+                    break;
+                case 4:
+                    limpaConsole();
+                    onibus.cancelarReserva();
+                default:
+                    return;
+            }
+        }
     }
 
     public static void print_Menu() {
@@ -39,9 +125,7 @@ public class menu_onibus {
         for (int y = 0; y < height; y++) {
             StringBuilder sb = new StringBuilder();
             for (int x = 0; x < width; x++) {
-
                 sb.append(image.getRGB(x, y) == -16777216 ? " " : "*");
-
             }
 
             if (sb.toString().trim().isEmpty()) {
@@ -53,10 +137,35 @@ public class menu_onibus {
 
     }
 
-    public static boolean confere_login(int cpf, String senha){
-        if(cpf == 123456789 && senha.equals("123")){
-            return true;
+    public static void cadastrarUsuario(List<Usuario> usuarios) {
+        System.out.println("Digite o CPF:");
+        String cpf = teclado.nextLine();
+        for (Usuario usuario : usuarios) {
+            if (usuario.getCpf().equals(cpf)) {
+                System.out.println("Usuário já cadastrado.");
+                return;
+            }
         }
-        return false;
-    } 
+        System.out.println("Digite o nome:");
+        String nome = teclado.nextLine();
+        Usuario novoUsuario = new Usuario(nome, cpf);
+        usuarios.add(novoUsuario);
+        System.out.println("Usuário " + novoUsuario.getNome() + " cadastrado com sucesso.");
+    }
+
+    public static void listarUsuarios(List<Usuario> usuarios) {
+        System.out.println("USUÁRIOS:");
+        for (Usuario usuario : usuarios) {
+            System.out.println("Nome: " + usuario.getNome() + " | CPF: " + usuario.getCpf());
+        }
+    }
+
+    public static void limpaConsole() throws IOException, InterruptedException {
+        if (System.getProperty("os.name").contains("Windows")) {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } else {
+            Runtime.getRuntime().exec("clear");
+        }
+    }
+
 }
