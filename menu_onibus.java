@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import modelos.Onibus.Onibus;
 import modelos.Usuario.Usuario;
+import java.io.IOException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,52 +15,100 @@ import java.awt.image.BufferedImage;
 public class menu_onibus {
 
     static Scanner teclado = new Scanner(System.in);
-    public static void main(String[] args) {
-        
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
         print_Menu();
 
-        Onibus onibus = new Onibus();
+        
         List<Usuario> usuarios = new ArrayList<Usuario>();
 
+        int opc;
+        boolean flag = true;
+        while (flag) {
+            System.out.println("\n");
+            System.out.println(
+                    "*******************************************************************************************************************************************************************************\n"
+                            + "                                                                          Escolha uma opção:\n"
+                            + "                                                                          0 - Sair do Sistema \n"
+                            + "                                                                         1 - Cadastrar Usuario\n"
+                            + "                                                                         2 - Listar Usuarios\n"
+                            + "                                                                         3 - Linha Biopark/Toledo\n"
+                            + "                                                                         4 - Linha Toledo/Cascavel\n"
+                            + "*******************************************************************************************************************************************************************************\n");
+
+            opc = Integer.parseInt(teclado.nextLine());
+
+            switch (opc) {
+                case 0:
+                    limpaConsole();
+                    System.out.println("Saindo do Sistema...");
+                    return;
+                case 1:
+                    limpaConsole();
+                    cadastrarUsuario(usuarios);
+                    break;
+                case 2:
+                    limpaConsole();
+                    listarUsuarios(usuarios);
+                    break;
+                case 3:
+                    limpaConsole();
+                    menu(1);
+                    break;
+                case 4:
+                    limpaConsole();
+                    menu(2);
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+                    return;
+            }
+        }
+    }
+
+    public static void menu(int linha) throws IOException, InterruptedException {
+        Onibus onibus = new Onibus();
         int opcao;
 
         while (true) {
-            System.out.println("Escolha uma opção:\n"
-            + "0 - Sair do Sistema\n"
-            + "1 - Ver Assentos Disponíveis\n"
-            + "2 - Reservar Assento\n"
-            + "3 - Comprar Assento\n"
-            + "4 - Cadastrar Clientes\n"
-            + "5 - Listar Clientes\n"
-            + "6 - Cancelar Reserva");
+            System.out.println("\n");
+            System.out.println(
+                    "*******************************************************************************************************************************************************************************\n"
+                            + "                                                                          Escolha uma opção:\n"
+                            + "                                                                          0 - Sair do Sistema \n"
+                            + "                                                                         1 - Ver Assentos Disponíveis\n"
+                            + "                                                                         2 - Reservar Assento\n"
+                            + "                                                                         3 - Comprar Assento\n"
+                            + "                                                                         4 - Cancelar Reserva\n"
+                            + "*******************************************************************************************************************************************************************************\n");
 
             opcao = Integer.parseInt(teclado.nextLine());
 
             switch (opcao) {
                 case 0:
+                    limpaConsole();
                     return;
                 case 1:
+                    limpaConsole();
                     onibus.verAssentosDisponiveis();
                     break;
-                case 2: 
+                case 2:
+                    limpaConsole();
                     onibus.reservarAssento();
                     break;
-                case 3: 
+                case 3:
+                    limpaConsole();
                     onibus.comprarAssento();
                     break;
                 case 4:
-                    cadastrarUsuario(usuarios);
-                    break;
-                case 5:
-                    listarUsuarios(usuarios);
-                    break;
-                case 6:
+                    limpaConsole();
                     onibus.cancelarReserva();
                 default:
                     return;
             }
         }
-}
+    }
 
     public static void print_Menu() {
         int width = 150;
@@ -107,7 +156,15 @@ public class menu_onibus {
     public static void listarUsuarios(List<Usuario> usuarios) {
         System.out.println("USUÁRIOS:");
         for (Usuario usuario : usuarios) {
-            System.out.println("Nome: " +usuario.getNome() + " | CPF: " + usuario.getCpf());
+            System.out.println("Nome: " + usuario.getNome() + " | CPF: " + usuario.getCpf());
+        }
+    }
+
+    public static void limpaConsole() throws IOException, InterruptedException {
+        if (System.getProperty("os.name").contains("Windows")) {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } else {
+            Runtime.getRuntime().exec("clear");
         }
     }
 
