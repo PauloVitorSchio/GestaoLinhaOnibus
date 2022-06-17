@@ -1,6 +1,9 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import modelos.Onibus.Onibus;
+import modelos.Usuario.Usuario;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,44 +13,52 @@ import java.awt.image.BufferedImage;
  */
 public class menu_onibus {
 
+    static Scanner teclado = new Scanner(System.in);
     public static void main(String[] args) {
-        Scanner teclado = new Scanner(System.in);
+        
         print_Menu();
-        System.out.println("-------------------------------------------------");
-        // pede cpf e senha
-        System.out.println("Digite o CPF: ");
-        String cpf = teclado.nextLine();
-        System.out.println("Digite a senha: ");
-        String senha = teclado.nextLine();
-        System.out.println("-------------------------------------------------");
-        boolean usuarioAutenticado = confere_login(cpf, senha);
 
-        if (usuarioAutenticado) {
+        Onibus onibus = new Onibus();
+        List<Usuario> usuarios = new ArrayList<Usuario>();
 
-            Onibus onibus = new Onibus();
-            int opcao = -1;
-            do {
-                System.out.println("Escolha uma opção:\n"
-                + "0 - Sair do Sistema\n"
-                + "1 - Ver Assentos Disponíveis\n"
-                + "2 - Reservar Assento\n"
-                + "3 - Comprar Assento\n");
+        int opcao;
 
-                opcao = teclado.nextInt();
+        while (true) {
+            System.out.println("Escolha uma opção:\n"
+            + "0 - Sair do Sistema\n"
+            + "1 - Ver Assentos Disponíveis\n"
+            + "2 - Reservar Assento\n"
+            + "3 - Comprar Assento\n"
+            + "4 - Cadastrar Clientes\n"
+            + "5 - Listar Clientes\n"
+            + "6 - Cancelar Reserva");
 
-                switch (opcao) {
-                    case 1:
-                        onibus.verAssentosDisponiveis();
-                        break;
-                    case 2: 
-                        onibus.reservarAssento();
-                        break;
-                    case 3: 
-                        onibus.comprarAssento();
-                        break;
-                }
-            } while (opcao != 0);
-    }
+            opcao = Integer.parseInt(teclado.nextLine());
+
+            switch (opcao) {
+                case 0:
+                    return;
+                case 1:
+                    onibus.verAssentosDisponiveis();
+                    break;
+                case 2: 
+                    onibus.reservarAssento();
+                    break;
+                case 3: 
+                    onibus.comprarAssento();
+                    break;
+                case 4:
+                    cadastrarUsuario(usuarios);
+                    break;
+                case 5:
+                    listarUsuarios(usuarios);
+                    break;
+                case 6:
+                    onibus.cancelarReserva();
+                default:
+                    return;
+            }
+        }
 }
 
     public static void print_Menu() {
@@ -77,10 +88,27 @@ public class menu_onibus {
 
     }
 
-    public static boolean confere_login(String cpf, String senha){
-        if(cpf.equals("123456789") && senha.equals("123")){
-            return true;
+    public static void cadastrarUsuario(List<Usuario> usuarios) {
+        System.out.println("Digite o CPF:");
+        String cpf = teclado.nextLine();
+        for (Usuario usuario : usuarios) {
+            if (usuario.getCpf().equals(cpf)) {
+                System.out.println("Usuário já cadastrado.");
+                return;
+            }
         }
-        return false;
-    } 
+        System.out.println("Digite o nome:");
+        String nome = teclado.nextLine();
+        Usuario novoUsuario = new Usuario(nome, cpf);
+        usuarios.add(novoUsuario);
+        System.out.println("Usuário " + novoUsuario.getNome() + " cadastrado com sucesso.");
+    }
+
+    public static void listarUsuarios(List<Usuario> usuarios) {
+        System.out.println("USUÁRIOS:");
+        for (Usuario usuario : usuarios) {
+            System.out.println("Nome: " +usuario.getNome() + " | CPF: " + usuario.getCpf());
+        }
+    }
+
 }

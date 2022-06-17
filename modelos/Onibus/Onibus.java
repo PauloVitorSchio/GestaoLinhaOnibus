@@ -33,6 +33,10 @@ public class Onibus {
     }
 
     public void comprarAssento() {
+        System.out.println("Entrou na função de comprar assento");
+    }
 
+    public void cancelarReserva() {
+        System.out.println("Entrou na função de cancelar reserva");
     }
 }
