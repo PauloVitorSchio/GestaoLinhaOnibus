@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import modelos.Onibus.Onibus;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -14,15 +16,39 @@ public class menu_onibus {
         System.out.println("-------------------------------------------------");
         // pede cpf e senha
         System.out.println("Digite o CPF: ");
-        int cpf = teclado.nextInt();
+        String cpf = teclado.nextLine();
         System.out.println("Digite a senha: ");
         String senha = teclado.nextLine();
         System.out.println("-------------------------------------------------");
-        confere_login(cpf, senha);
+        boolean usuarioAutenticado = confere_login(cpf, senha);
 
-        // se login e senha conferem direciona para menu de clientes ou para menu de
-        // funcionários
+        if (usuarioAutenticado) {
+
+            Onibus onibus = new Onibus();
+            int opcao = -1;
+            do {
+                System.out.println("Escolha uma opção:\n"
+                + "0 - Sair do Sistema\n"
+                + "1 - Ver Assentos Disponíveis\n"
+                + "2 - Reservar Assento\n"
+                + "3 - Comprar Assento\n");
+
+                opcao = teclado.nextInt();
+
+                switch (opcao) {
+                    case 1:
+                        onibus.verAssentosDisponiveis();
+                        break;
+                    case 2: 
+                        onibus.reservarAssento();
+                        break;
+                    case 3: 
+                        onibus.comprarAssento();
+                        break;
+                }
+            } while (opcao != 0);
     }
+}
 
     public static void print_Menu() {
         int width = 150;
@@ -39,9 +65,7 @@ public class menu_onibus {
         for (int y = 0; y < height; y++) {
             StringBuilder sb = new StringBuilder();
             for (int x = 0; x < width; x++) {
-
                 sb.append(image.getRGB(x, y) == -16777216 ? " " : "*");
-
             }
 
             if (sb.toString().trim().isEmpty()) {
@@ -53,8 +77,8 @@ public class menu_onibus {
 
     }
 
-    public static boolean confere_login(int cpf, String senha){
-        if(cpf == 123456789 && senha.equals("123")){
+    public static boolean confere_login(String cpf, String senha){
+        if(cpf.equals("123456789") && senha.equals("123")){
             return true;
         }
         return false;
