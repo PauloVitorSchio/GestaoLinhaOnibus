@@ -21,11 +21,25 @@ public class Onibus {
     }
 
     public void verAssentosDisponiveis() {
-        for (int i = 0; i < 20; i++) {
-            System.out.println(
-                "Número: " + assentos[i].getNumero() + " - Status: " + assentos[i].getStatus()
-            );
+        int index = -1;
+        int aux = 0;
+        System.out.println("\n");
+        System.out.println("---------------------------------------");
+        for (int i = 0; i < 5; i++) {
+            if (i != 2) {
+                index++;
+                aux = index;
+                for (int j = 0; j < 5; j++) {
+                    System.out.print("| " + assentos[aux].getNumero() + " " + assentos[aux].getStatus() + " |");
+                    aux = aux + 4;
+                }
+                System.out.println("");
+            } else {
+                System.out.println("\n");
+            }
         }
+        System.out.println("---------------------------------------");
+
     }
 
     public void reservarAssento() {
