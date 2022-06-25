@@ -33,8 +33,9 @@ public class menu_onibus {
                             + "                                                                          0 - Sair do Sistema \n"
                             + "                                                                         1 - Cadastrar Usuario\n"
                             + "                                                                         2 - Listar Usuarios\n"
-                            + "                                                                         3 - Linha Biopark/Toledo\n"
-                            + "                                                                         4 - Linha Toledo/Cascavel\n"
+                            +"                                                                          3 - Gerar Relatório de vendas\n"
+                            + "                                                                         4 - Linha Biopark/Toledo\n"
+                            + "                                                                         5 - Linha Toledo/Cascavel\n"
                             + "*******************************************************************************************************************************************************************************\n");
 
             opc = Integer.parseInt(teclado.nextLine());
@@ -54,12 +55,15 @@ public class menu_onibus {
                     break;
                 case 3:
                     limpaConsole();
-                    menu(1);
+                    // gerar relatorio
                     break;
                 case 4:
                     limpaConsole();
-                    menu(2);
+                    menu(1);
                     break;
+                case 5:
+                    limpaConsole();
+                    menu(2);
                 default:
                     System.out.println("Opção inválida!");
                     return;
