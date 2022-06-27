@@ -12,7 +12,11 @@ import modelos.Usuario.Usuario;
 public class Utils {
     
     public static void salvaDados(Object[] array, File file) {
-        
+        /**
+         * Recebe um array de objetos e grava-os em um arquivo.
+         * @param array : um array de objetos qualquer
+         * @param file : um arquivo do tipo File 
+         */
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -30,7 +34,11 @@ public class Utils {
     }
 
     public static void leArquivoUsuarios(Usuario[] array, File file) {
-
+        /**
+         * Lê um arquivo de objetos e os transcreve para um array de objetos do tipo Usuário.
+         * @param array : um array de objetos do tipo Usuário
+         * @param file : um arquivo do tipo File
+         */
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
@@ -48,7 +56,11 @@ public class Utils {
     }
 
     public static void leArquivoAssentos(Assento[] array, File file) {
-
+        /**
+         * Lê um arquivo de objetos e os transcreve para um array de objetos do tipo Assento.
+         * @param array : um array de objetos do tipo Assento
+         * @param file : um arquivo do tipo File
+         */
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

@@ -40,4 +40,14 @@ public class Usuario implements Serializable {
         setCpf(cpf);
         return this;
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " nome='" + getNome() + "'" +
+            ", cpf='" + getCpf() + "'" +
+            "}";
+    }
+
 }

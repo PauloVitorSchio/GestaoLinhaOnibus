@@ -20,7 +20,6 @@ public class menu_onibus {
 
         print_Menu();
 
-        
         List<Usuario> usuarios = new ArrayList<Usuario>();
 
         int opc;
