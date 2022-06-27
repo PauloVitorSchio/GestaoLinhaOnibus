@@ -1,8 +1,10 @@
 package modelos.Assento;
 
+import java.io.Serializable;
+
 import modelos.Usuario.*;
 
-public class Assento {
+public class Assento implements Serializable {
 
     private int numero;
     private Status status;

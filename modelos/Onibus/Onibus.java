@@ -1,8 +1,10 @@
 package modelos.Onibus;
 
+import java.io.Serializable;
+
 import modelos.Assento.Assento;
 
-public class Onibus {
+public class Onibus implements Serializable {
     private Assento[] assentos;
 
     public Onibus() {
