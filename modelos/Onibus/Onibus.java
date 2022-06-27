@@ -1,14 +1,17 @@
 package modelos.Onibus;
 
+import java.io.Serializable;
+
 import modelos.Assento.Assento;
 import modelos.Assento.Status;
-public class Onibus {
+
+public class Onibus implements Serializable {
+
     String ANSI_RESET = "\u001B[0m";
     String ANSI_GREEN = "\u001B[32m";
     String ANSI_RED = "\u001B[31m";
     String ANSI_YELLOW = "\u001B[33m";
     String ANSI;
-
 
     private Assento[] assentos;
 
