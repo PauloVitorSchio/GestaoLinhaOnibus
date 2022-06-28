@@ -70,4 +70,10 @@ public class Onibus {
     public void cancelarReserva() {
         System.out.println("Entrou na função de cancelar reserva");
     }
+
+    public void relatorio(){
+        
+    }
+
+
 }

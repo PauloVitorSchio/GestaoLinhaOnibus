@@ -15,11 +15,12 @@ import java.awt.image.BufferedImage;
 public class menu_onibus {
 
     static Scanner teclado = new Scanner(System.in);
+    static Onibus onibus = new Onibus();
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
         print_Menu();
-
+        
         
         List<Usuario> usuarios = new ArrayList<Usuario>();
 
@@ -55,7 +56,7 @@ public class menu_onibus {
                     break;
                 case 3:
                     limpaConsole();
-                    // gerar relatorio
+                    onibus.relatorio();
                     break;
                 case 4:
                     limpaConsole();
@@ -72,7 +73,6 @@ public class menu_onibus {
     }
 
     public static void menu(int linha) throws IOException, InterruptedException {
-        Onibus onibus = new Onibus();
         int opcao;
 
         while (true) {
