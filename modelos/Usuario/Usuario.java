@@ -1,6 +1,8 @@
 package modelos.Usuario;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private String nome;
     private String cpf;
 
@@ -38,4 +40,14 @@ public class Usuario {
         setCpf(cpf);
         return this;
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " nome='" + getNome() + "'" +
+            ", cpf='" + getCpf() + "'" +
+            "}";
+    }
+
 }

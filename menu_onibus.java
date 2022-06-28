@@ -20,8 +20,6 @@ public class menu_onibus {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         print_Menu();
-        
-        
         List<Usuario> usuarios = new ArrayList<Usuario>();
 
         int opc;
