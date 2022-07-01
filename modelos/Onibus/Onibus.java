@@ -93,7 +93,7 @@ public class Onibus implements Serializable {
                 // reserva e salva arquivo
                 assentos[numero].setStatus(Status.RESERVADO);
                 assentos[numero].setDono(usu);
-                if(salvar(file, assentos)){
+                if (salvar(file, assentos)) {
                     System.out.println("Reservado Com Sucesso");
                 }
             } else {
@@ -145,7 +145,6 @@ public class Onibus implements Serializable {
 
     }
 
-
     public void comprarAssento(int linha) {
         System.out.println("Digite cpf do cliente: ");
         cpf = teclado.nextLine();
@@ -163,7 +162,7 @@ public class Onibus implements Serializable {
                 switch (opc) {
                     case 1:
                         comprar_livre(linha, usuario);
-                    break;
+                        break;
                     case 2:
                         comprar_reservada(control, linha, usuario);
                         break;
@@ -171,7 +170,7 @@ public class Onibus implements Serializable {
                     default:
                         break;
                 }
-            }else{
+            } else {
                 comprar_livre(linha, usuario);
             }
         } else {
@@ -179,8 +178,7 @@ public class Onibus implements Serializable {
         }
     }
 
-
-    public void comprar_livre(int linha, Usuario usuario){
+    public void comprar_livre(int linha, Usuario usuario) {
         verAssentosDisponiveis(linha);
         System.out.println("Qual assento deseja comprar: ");
         int numero = Integer.parseInt(teclado.nextLine());
@@ -191,23 +189,39 @@ public class Onibus implements Serializable {
         if (((numero >= 0) && (numero < 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
             assentos[numero].setStatus(Status.OCUPADO);
             assentos[numero].setDono(usuario);
-            if(salvar(file, assentos)){
+            if (salvar(file, assentos)) {
                 System.out.println("Comprado com sucesso");
             }
-        }else{
+        } else {
             System.out.println("Assento inválido ou já ocupado");
         }
     }
 
-    public void comprar_reservada(List<Integer>control, int linha, Usuario usuario){
+    public void comprar_reservada(List<Integer> control, int linha, Usuario usuario) {
+        int count = control.size();
+        File file = new File("assentos_" + linha + ".txt");
+        Assento[] assentos = new Assento[20];
+        Utils.leArquivoAssentos(assentos, file);
+        while (count > 0) {
+            System.out.println("Informe qual assento deseja comprar ou 'n' para sair:");
+            try {
+                int numero = Integer.parseInt(teclado.nextLine());
+                if (control.contains(numero)) {
+                    assentos[numero].setStatus(Status.OCUPADO);
+                    assentos[numero].setDono(usuario);
+                    count--;
+                } else {
+                    System.out.println("Este assento não é seu");
+                }
+            } catch (Exception ex) {
+                count = 0;
+            }
+        }
 
+        if (salvar(file, assentos)) {
+            System.out.println("Comprado com sucesso");
+        }
     }
-
-
-
-
-
-
 
     public List<Integer> Controla_Reserva(Assento[] assentos, File file, String cpf) {
         // verifica quais assentos são reservados pelo usuario
@@ -216,7 +230,7 @@ public class Onibus implements Serializable {
         List<Integer> control = new ArrayList<Integer>();
         for (Assento assento : assentos) {
             if (assento.getDono() != null) {
-                if ((assento.getDono().getCpf().equals(cpf))&&(assento.getStatus()==Status.RESERVADO)) {
+                if ((assento.getDono().getCpf().equals(cpf)) && (assento.getStatus() == Status.RESERVADO)) {
                     System.out.println(assento.getNumero());
                     control.add(assento.getNumero());
                 }
