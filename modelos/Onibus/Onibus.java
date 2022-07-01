@@ -83,7 +83,8 @@ public class Onibus implements Serializable {
         File file = new File("assentos_" + linha + ".txt");
         Assento[] assentos = new Assento[20];
         Utils.leArquivoAssentos(assentos, file);
-        if (assentos[numero].getStatus() == Status.LIVRE) {
+
+        if (((numero >= 0) && (numero < 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
             // checa se o cliente esta cadastrado
             System.out.println("Digite o cpf do cliente: ");
             cpf = teclado.nextLine();
@@ -92,17 +93,14 @@ public class Onibus implements Serializable {
                 // reserva e salva arquivo
                 assentos[numero].setStatus(Status.RESERVADO);
                 assentos[numero].setDono(usu);
-                if (salvar(file, assentos)) {
+                if(salvar(file, assentos)){
                     System.out.println("Reservado Com Sucesso");
                 }
-
-                Utils.salvaDados(obj, file);
-                System.out.println("Reservado com Sucesso");
             } else {
                 System.out.println("Usuario não Cadastrado");
             }
         } else {
-            System.out.println("Assento não Disponível");
+            System.out.println("Assento não Disponível ou não encontrado");
         }
     }
 
@@ -143,11 +141,10 @@ public class Onibus implements Serializable {
                 System.out.println("cancelado com sucesso");
             }
 
-
-
         }
-            
+
     }
+
 
     public void comprarAssento(int linha) {
         System.out.println("Digite cpf do cliente: ");
@@ -230,7 +227,7 @@ public class Onibus implements Serializable {
     }
 
     public void relatorio() {
-        
+
     }
 
     public boolean salvar(File file, Assento[] assentos) {
