@@ -168,7 +168,7 @@ public class Onibus implements Serializable {
                         comprar_livre(linha, usuario);
                     break;
                     case 2:
-                        // comprar_reservada(control, linha, usuario);
+                        comprar_reservada(control, linha, usuario);
                         break;
 
                     default:
@@ -200,6 +200,10 @@ public class Onibus implements Serializable {
         }else{
             System.out.println("Assento inválido ou já ocupado");
         }
+    }
+
+    public void comprar_reservada(List<Integer>control, int linha, Usuario usuario){
+
     }
 
 
