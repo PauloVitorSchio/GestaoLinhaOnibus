@@ -2,6 +2,8 @@ package modelos.Onibus;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import modelos.Assento.Assento;
@@ -80,7 +82,8 @@ public class Onibus implements Serializable {
         File file = new File("assentos_" + linha + ".txt");
         Assento[] assentos = new Assento[20];
         Utils.leArquivoAssentos(assentos, file);
-        if (assentos[numero].getStatus() == Status.LIVRE) {
+        
+        if (((numero>=0)&&(numero<19))&&(assentos[numero].getStatus() == Status.LIVRE)) {
             // checa se o cliente esta cadastrado
             System.out.println("Digite o cpf do cliente: ");
             String cpf = teclado.nextLine();
@@ -89,18 +92,12 @@ public class Onibus implements Serializable {
                 // reserva e salva arquivo
                 assentos[numero].setStatus(Status.RESERVADO);
                 assentos[numero].setDono(usu);
-
-                for (int i = 0; i < assentos.length; i++) {
-                    obj[i] = assentos[i];
-                }
-
-                Utils.salvaDados(obj, file);
-                System.out.println("Reservado com Sucesso");
+                salvar(file, assentos);
             } else {
                 System.out.println("Usuario não Cadastrado");
             }
         } else {
-            System.out.println("Assento não Disponível");
+            System.out.println("Assento não Disponível ou não encontrado");
         }
     }
 
@@ -113,30 +110,57 @@ public class Onibus implements Serializable {
         System.out.println("Informe seu cpf: ");
         String cpf = teclado.nextLine();
         Usuario usu = Utils.confereSeUsuExiste(cpf);
-        if (usu!=null) {
+        if (usu != null) {
             // checa assentos reservados por ele
             File file = new File("assentos_" + linha + ".txt");
             Assento[] assentos = new Assento[20];
             Utils.leArquivoAssentos(assentos, file);
-            int control = 0;
+
+            List<Integer> control = new ArrayList<Integer>();
             for (Assento assento : assentos) {
                 if (assento.getDono().getCpf().equals(cpf)) {
                     System.out.println(assento.getNumero());
-                    control++;
+                    control.add(assento.getNumero());
                 }
             }
 
             // pede qual ele quer cancelar
-            
+            // int count = control.size();
+            // while (count > 0) {
+            //     System.out.println("Informe qual assento deseja cancelar ou 'n' para sair: ");
+            //     try {
+            //         int numero = Integer.parseInt(teclado.nextLine());
+            //         if (control.contains(numero)) {
+            //             assentos[numero].setStatus(Status.LIVRE);
+            //             assentos[numero].setDono(null);
+            //             count--;
+            //         } else {
+            //             System.out.println("Este assento não é seu");
+            //         }
+            //     } catch (Exception ex) {
+            //         count = 0;
+            //     }
+            // }
 
-
+            // salva arquivo
+            salvar(file, assentos);
 
         }
-            
+
+    }
+
+
+    public void salvar(File file, Assento[] assentos){
+        for (int i = 0; i < assentos.length; i++) {
+            obj[i] = assentos[i];
+        }
+
+        Utils.salvaDados(obj, file);
+        System.out.println("Reservado com Sucesso");
     }
 
     public void relatorio() {
-        
+
     }
 
 }
