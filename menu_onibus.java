@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 import modelos.Onibus.Onibus;
 import modelos.Usuario.Usuario;
+import modelos.Utils.Utils;
+
+import java.io.File;
 import java.io.IOException;
 
 import java.awt.*;
@@ -141,7 +144,10 @@ public class menu_onibus {
 
     }
 
+
     public static void cadastrarUsuario(List<Usuario> usuarios) {
+        File file = new File("usuarios.txt"); /**/
+        Utils.leArquivoUsuarios(usuarios, file);
         System.out.println("Digite o CPF:");
         String cpf = teclado.nextLine();
         for (Usuario usuario : usuarios) {
@@ -154,16 +160,22 @@ public class menu_onibus {
         String nome = teclado.nextLine();
         Usuario novoUsuario = new Usuario(nome, cpf);
         usuarios.add(novoUsuario);
-        System.out.println("Usuário " + novoUsuario.getNome() + " cadastrado com sucesso.");
+        Object[] array = new Object[usuarios.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = usuarios.get(i);
+        }
+        Utils.salvaDados(array, file);
+        System.out.println("Usuário " + novoUsuario.getNome() + " foi cadastrado com sucesso!");
     }
 
     public static void listarUsuarios(List<Usuario> usuarios) {
+        File file = new File("usuarios.txt");
+        Utils.leArquivoUsuarios(usuarios, file);
         System.out.println("USUÁRIOS:");
         for (Usuario usuario : usuarios) {
             System.out.println("Nome: " + usuario.getNome() + " | CPF: " + usuario.getCpf());
         }
     }
-
     public static void limpaConsole() throws IOException, InterruptedException {
         if (System.getProperty("os.name").contains("Windows")) {
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();

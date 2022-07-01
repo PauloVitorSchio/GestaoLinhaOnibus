@@ -100,7 +100,7 @@ public class Onibus implements Serializable {
                     Relatorio[] relatorio = new Relatorio[2];
 
                     Utils.leArquivoRelatorio(relatorio, file_reserva);
-                    relatorio[linha].setCount_reservados(relatorio[linha].getCount_reservados()+1);
+                    relatorio[linha-1].setCount_reservados(relatorio[linha-1].getCount_reservados()+1);
                     salvar_relatorio(file_reserva, relatorio);
 
                 }
@@ -153,7 +153,7 @@ public class Onibus implements Serializable {
                 Relatorio[] relatorio = new Relatorio[2];
 
                 Utils.leArquivoRelatorio(relatorio, file_cancela);
-                relatorio[linha].setCount_cancelados(relatorio[linha].getCount_cancelados()+count_cancelar);
+                relatorio[linha-1].setCount_cancelados(relatorio[linha-1].getCount_cancelados()+count_cancelar);
                 salvar_relatorio(file_cancela, relatorio);
             }
 
@@ -211,7 +211,7 @@ public class Onibus implements Serializable {
                 Relatorio[] relatorio = new Relatorio[2];
 
                 Utils.leArquivoRelatorio(relatorio, file_comprar);
-                relatorio[linha].setCount_comprados(relatorio[linha].getCount_comprados()+1);
+                relatorio[linha-1].setCount_comprados(relatorio[linha-1].getCount_comprados()+1);
                 salvar_relatorio(file_comprar, relatorio);
             }
         } else {
@@ -248,7 +248,7 @@ public class Onibus implements Serializable {
             Relatorio[] relatorio = new Relatorio[2];
 
             Utils.leArquivoRelatorio(relatorio, file_comprar);
-            relatorio[linha].setCount_comprados(relatorio[linha].getCount_comprados()+count_comprar);
+            relatorio[linha-1].setCount_comprados(relatorio[linha-1].getCount_comprados()+count_comprar);
             salvar_relatorio(file_comprar, relatorio);
         }
     }

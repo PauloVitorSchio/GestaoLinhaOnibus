@@ -44,6 +44,7 @@ public class Utils {
          * @param file : um arquivo do tipo File
          */
         try {
+            usuarios.clear();
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             boolean control = true;
