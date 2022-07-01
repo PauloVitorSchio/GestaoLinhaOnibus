@@ -12,12 +12,13 @@ import modelos.Assento.Assento;
 import modelos.Usuario.Usuario;
 
 public class Utils {
-    
+
     public static void salvaDados(Object[] array, File file) {
         /**
          * Recebe um array de objetos e grava-os em um arquivo.
+         * 
          * @param array : um array de objetos qualquer
-         * @param file : um arquivo do tipo File 
+         * @param file  : um arquivo do tipo File
          */
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -44,24 +45,38 @@ public class Utils {
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            boolean control = true;
+            while(control){
+                Usuario usu = null;
+                try{
+                    usu = (Usuario) objectInputStream.readObject();
+                }catch(ClassNotFoundException ex){
+                    ex.printStackTrace();
+                }
 
-            for (int i = 0; i < usuarios.size(); i++) {
-                usuarios.add((Usuario) objectInputStream.readObject());
+                if(usu!=null){
+                    usuarios.add(usu);
+                }else{
+                    control = false;
+                }
+            
+            
             }
-
             objectInputStream.close();
             fileInputStream.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            
         }
     }
 
     public static void leArquivoAssentos(Assento[] array, File file) {
         /**
-         * Lê um arquivo de objetos e os transcreve para um array de objetos do tipo Assento.
+         * Lê um arquivo de objetos e os transcreve para um array de objetos do tipo
+         * Assento.
+         * 
          * @param array : um array de objetos do tipo Assento
-         * @param file : um arquivo do tipo File
+         * @param file  : um arquivo do tipo File
          */
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -73,14 +88,13 @@ public class Utils {
 
             objectInputStream.close();
             fileInputStream.close();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public static Usuario confereSeUsuExiste(String cpf){
+    public static Usuario confereSeUsuExiste(String cpf) {
         /*
          * recebe cpf como parametro
          * return um objeto se usuario existe
@@ -90,10 +104,10 @@ public class Utils {
         ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
         Utils.leArquivoUsuarios(usuarios, file_usu);
         for (Usuario usuario : usuarios) {
-            if(usuario.getCpf().equals(cpf)){
+            if (usuario.getCpf().equals(cpf)) {
                 return usuario;
             }
-        } 
+        }
         return null;
     }
 }
