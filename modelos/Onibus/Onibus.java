@@ -2,6 +2,8 @@ package modelos.Onibus;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import modelos.Assento.Assento;
@@ -17,6 +19,7 @@ public class Onibus implements Serializable {
     String ANSI_RED = "\u001B[31m";
     String ANSI_YELLOW = "\u001B[33m";
     String ANSI;
+    String cpf;
 
     private Assento[] assentos;
 
@@ -83,15 +86,14 @@ public class Onibus implements Serializable {
         if (assentos[numero].getStatus() == Status.LIVRE) {
             // checa se o cliente esta cadastrado
             System.out.println("Digite o cpf do cliente: ");
-            String cpf = teclado.nextLine();
-            Usuario usu = Utils.confereSeUsuExiste(cpf);
+            cpf = teclado.nextLine();
+            Usuario usu = Utils.confereSeUsuarioExiste(cpf);
             if (usu != null) {
                 // reserva e salva arquivo
                 assentos[numero].setStatus(Status.RESERVADO);
                 assentos[numero].setDono(usu);
-
-                for (int i = 0; i < assentos.length; i++) {
-                    obj[i] = assentos[i];
+                if (salvar(file, assentos)) {
+                    System.out.println("Reservado Com Sucesso");
                 }
 
                 Utils.salvaDados(obj, file);
@@ -104,30 +106,42 @@ public class Onibus implements Serializable {
         }
     }
 
-    public void comprarAssento() {
-        System.out.println("Entrou na função de comprar assento");
-    }
-
     public void cancelarReserva(int linha) {
         // checa se usuario existe
         System.out.println("Informe seu cpf: ");
-        String cpf = teclado.nextLine();
-        Usuario usu = Utils.confereSeUsuExiste(cpf);
-        if (usu!=null) {
+        cpf = teclado.nextLine();
+        Usuario usu = Utils.confereSeUsuarioExiste(cpf);
+        if (usu != null) {
             // checa assentos reservados por ele
             File file = new File("assentos_" + linha + ".txt");
             Assento[] assentos = new Assento[20];
-            Utils.leArquivoAssentos(assentos, file);
-            int control = 0;
-            for (Assento assento : assentos) {
-                if (assento.getDono().getCpf().equals(cpf)) {
-                    System.out.println(assento.getNumero());
-                    control++;
+            System.out.println("Seus assentos");
+            List<Integer> control = Controla_Reserva(assentos, file, cpf);
+
+            // pede qual ele quer cancelar
+            int count = control.size();
+            while (count > 0) {
+                System.out.println("Informe qual assento deseja cancelar ou 'n' para sair:");
+                try {
+                    int numero = Integer.parseInt(teclado.nextLine());
+                    if (control.contains(numero)) {
+                        assentos[numero].setStatus(Status.LIVRE);
+                        assentos[numero].setDono(null);
+                        count--;
+                    } else {
+                        System.out.println("Este assento não é seu");
+                    }
+                } catch (Exception ex) {
+                    count = 0;
                 }
             }
 
-            // pede qual ele quer cancelar
-            
+            // salva arquivo
+            if (control.size() == 0) {
+                System.out.println("Voce ainda não possui reservas");
+            } else if (salvar(file, assentos)) {
+                System.out.println("cancelado com sucesso");
+            }
 
 
 
@@ -135,8 +149,93 @@ public class Onibus implements Serializable {
             
     }
 
+    public void comprarAssento(int linha) {
+        System.out.println("Digite cpf do cliente: ");
+        cpf = teclado.nextLine();
+        Usuario usuario = Utils.confereSeUsuarioExiste(cpf);
+        if (usuario != null) {
+            File file = new File("assentos_" + linha + ".txt");
+            Assento[] assentos = new Assento[20];
+            List<Integer> control = Controla_Reserva(assentos, file, cpf);
+            if (control.size() > 0) {
+                System.out.println("seus assentos");
+                int opc;
+                System.out.println("Digite 1 para comprar novo assento ou 2 para comprar assento reservado: ");
+                opc = Integer.parseInt(teclado.nextLine());
+
+                switch (opc) {
+                    case 1:
+                        comprar_livre(linha, usuario);
+                    break;
+                    case 2:
+                        // comprar_reservada(control, linha, usuario);
+                        break;
+
+                    default:
+                        break;
+                }
+            }else{
+                comprar_livre(linha, usuario);
+            }
+        } else {
+            System.out.println("Usuário inválido");
+        }
+    }
+
+
+    public void comprar_livre(int linha, Usuario usuario){
+        verAssentosDisponiveis(linha);
+        System.out.println("Qual assento deseja comprar: ");
+        int numero = Integer.parseInt(teclado.nextLine());
+        File file = new File("assentos_" + linha + ".txt");
+        Assento[] assentos = new Assento[20];
+        Utils.leArquivoAssentos(assentos, file);
+
+        if (((numero >= 0) && (numero < 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
+            assentos[numero].setStatus(Status.OCUPADO);
+            assentos[numero].setDono(usuario);
+            if(salvar(file, assentos)){
+                System.out.println("Comprado com sucesso");
+            }
+        }else{
+            System.out.println("Assento inválido ou já ocupado");
+        }
+    }
+
+
+
+
+
+
+
+    public List<Integer> Controla_Reserva(Assento[] assentos, File file, String cpf) {
+        // verifica quais assentos são reservados pelo usuario
+        Utils.leArquivoAssentos(assentos, file);
+
+        List<Integer> control = new ArrayList<Integer>();
+        for (Assento assento : assentos) {
+            if (assento.getDono() != null) {
+                if ((assento.getDono().getCpf().equals(cpf))&&(assento.getStatus()==Status.RESERVADO)) {
+                    System.out.println(assento.getNumero());
+                    control.add(assento.getNumero());
+                }
+
+            }
+        }
+        return control;
+    }
+
     public void relatorio() {
         
+    }
+
+    public boolean salvar(File file, Assento[] assentos) {
+        for (int i = 0; i < assentos.length; i++) {
+            obj[i] = assentos[i];
+        }
+
+        Utils.salvaDados(obj, file);
+        return true;
     }
 
 }

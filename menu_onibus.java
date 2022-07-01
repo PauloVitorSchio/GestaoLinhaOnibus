@@ -101,7 +101,7 @@ public class menu_onibus {
                     break;
                 case 3:
                     limpaConsole();
-                    onibus.comprarAssento();
+                    onibus.comprarAssento(linha);
                     break;
                 case 4:
                     limpaConsole();
