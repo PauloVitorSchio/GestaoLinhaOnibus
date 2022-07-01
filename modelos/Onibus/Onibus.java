@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import modelos.Assento.Assento;
 import modelos.Assento.Status;
+import modelos.Usuario.Relatorio;
 import modelos.Usuario.Usuario;
 import modelos.Utils.Utils;
 
@@ -95,6 +96,13 @@ public class Onibus implements Serializable {
                 assentos[numero].setDono(usu);
                 if (salvar(file, assentos)) {
                     System.out.println("Reservado Com Sucesso");
+                    File file_reserva = new File("relatorio.txt");
+                    Relatorio[] relatorio = new Relatorio[2];
+
+                    Utils.leArquivoRelatorio(relatorio, file_reserva);
+                    relatorio[linha].setCount_reservados(relatorio[linha].getCount_reservados()+1);
+                    salvar_relatorio(file_reserva, relatorio);
+
                 }
             } else {
                 System.out.println("Usuario não Cadastrado");
@@ -105,6 +113,7 @@ public class Onibus implements Serializable {
     }
 
     public void cancelarReserva(int linha) {
+        int count_cancelar = 0;
         // checa se usuario existe
         System.out.println("Informe seu cpf: ");
         cpf = teclado.nextLine();
@@ -123,6 +132,7 @@ public class Onibus implements Serializable {
                 try {
                     int numero = Integer.parseInt(teclado.nextLine());
                     if (control.contains(numero)) {
+                        count_cancelar++;
                         assentos[numero].setStatus(Status.LIVRE);
                         assentos[numero].setDono(null);
                         count--;
@@ -139,6 +149,12 @@ public class Onibus implements Serializable {
                 System.out.println("Voce ainda não possui reservas");
             } else if (salvar(file, assentos)) {
                 System.out.println("cancelado com sucesso");
+                File file_cancela = new File("relatorio.txt");
+                Relatorio[] relatorio = new Relatorio[2];
+
+                Utils.leArquivoRelatorio(relatorio, file_cancela);
+                relatorio[linha].setCount_cancelados(relatorio[linha].getCount_cancelados()+count_cancelar);
+                salvar_relatorio(file_cancela, relatorio);
             }
 
         }
@@ -191,6 +207,12 @@ public class Onibus implements Serializable {
             assentos[numero].setDono(usuario);
             if (salvar(file, assentos)) {
                 System.out.println("Comprado com sucesso");
+                File file_comprar = new File("relatorio.txt");
+                Relatorio[] relatorio = new Relatorio[2];
+
+                Utils.leArquivoRelatorio(relatorio, file_comprar);
+                relatorio[linha].setCount_comprados(relatorio[linha].getCount_comprados()+1);
+                salvar_relatorio(file_comprar, relatorio);
             }
         } else {
             System.out.println("Assento inválido ou já ocupado");
@@ -199,6 +221,7 @@ public class Onibus implements Serializable {
 
     public void comprar_reservada(List<Integer> control, int linha, Usuario usuario) {
         int count = control.size();
+        int count_comprar=0;
         File file = new File("assentos_" + linha + ".txt");
         Assento[] assentos = new Assento[20];
         Utils.leArquivoAssentos(assentos, file);
@@ -207,6 +230,7 @@ public class Onibus implements Serializable {
             try {
                 int numero = Integer.parseInt(teclado.nextLine());
                 if (control.contains(numero)) {
+                    count_comprar++;
                     assentos[numero].setStatus(Status.OCUPADO);
                     assentos[numero].setDono(usuario);
                     count--;
@@ -220,6 +244,12 @@ public class Onibus implements Serializable {
 
         if (salvar(file, assentos)) {
             System.out.println("Comprado com sucesso");
+            File file_comprar = new File("relatorio.txt");
+            Relatorio[] relatorio = new Relatorio[2];
+
+            Utils.leArquivoRelatorio(relatorio, file_comprar);
+            relatorio[linha].setCount_comprados(relatorio[linha].getCount_comprados()+count_comprar);
+            salvar_relatorio(file_comprar, relatorio);
         }
     }
 
@@ -241,7 +271,17 @@ public class Onibus implements Serializable {
     }
 
     public void relatorio() {
+        File file = new File("relatorio.txt");
+        Relatorio[] array = new Relatorio[2];
 
+        Utils.leArquivoRelatorio(array, file);
+        for (Relatorio relatorio : array) {
+            System.out.println("Linha: "+relatorio.getLinha());
+            System.out.println("Cancelados: "+relatorio.getCount_cancelados());
+            System.out.println("Comprados: "+relatorio.getCount_comprados());
+            System.out.println("Reservados: "+relatorio.getCount_reservados());
+            System.out.println("---------------------------------------------------------------");
+        }
     }
 
     public boolean salvar(File file, Assento[] assentos) {
@@ -253,4 +293,13 @@ public class Onibus implements Serializable {
         return true;
     }
 
+
+    public boolean salvar_relatorio(File file, Relatorio[] relatorio) {
+        for (int i = 0; i < relatorio.length; i++) {
+            obj[i] = relatorio[i];
+        }
+
+        Utils.salvaDados(obj, file);
+        return true;
+    }
 }
