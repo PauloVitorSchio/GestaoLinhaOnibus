@@ -94,7 +94,7 @@ public class Utils {
         }
     }
 
-    public static Usuario confereSeUsuExiste(String cpf) {
+    public static Usuario confereSeUsuarioExiste(String cpf) {
         /*
          * recebe cpf como parametro
          * return um objeto se usuario existe
