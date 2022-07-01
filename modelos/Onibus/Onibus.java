@@ -82,8 +82,8 @@ public class Onibus implements Serializable {
         File file = new File("assentos_" + linha + ".txt");
         Assento[] assentos = new Assento[20];
         Utils.leArquivoAssentos(assentos, file);
-        
-        if (((numero>=0)&&(numero<19))&&(assentos[numero].getStatus() == Status.LIVRE)) {
+
+        if (((numero >= 0) && (numero < 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
             // checa se o cliente esta cadastrado
             System.out.println("Digite o cpf do cliente: ");
             String cpf = teclado.nextLine();
@@ -92,7 +92,9 @@ public class Onibus implements Serializable {
                 // reserva e salva arquivo
                 assentos[numero].setStatus(Status.RESERVADO);
                 assentos[numero].setDono(usu);
-                salvar(file, assentos);
+                if(salvar(file, assentos)){
+                    System.out.println("Reservado Com Sucesso");
+                }
             } else {
                 System.out.println("Usuario não Cadastrado");
             }
@@ -117,46 +119,54 @@ public class Onibus implements Serializable {
             Utils.leArquivoAssentos(assentos, file);
 
             List<Integer> control = new ArrayList<Integer>();
+            System.out.println("Seus assentos: ");
             for (Assento assento : assentos) {
-                if (assento.getDono().getCpf().equals(cpf)) {
-                    System.out.println(assento.getNumero());
-                    control.add(assento.getNumero());
+                if (assento.getDono() != null) {
+                    if (assento.getDono().getCpf().equals(cpf)) {
+                        System.out.println(assento.getNumero());
+                        control.add(assento.getNumero());
+                    }
+
                 }
             }
 
-            // pede qual ele quer cancelar
-            // int count = control.size();
-            // while (count > 0) {
-            //     System.out.println("Informe qual assento deseja cancelar ou 'n' para sair: ");
-            //     try {
-            //         int numero = Integer.parseInt(teclado.nextLine());
-            //         if (control.contains(numero)) {
-            //             assentos[numero].setStatus(Status.LIVRE);
-            //             assentos[numero].setDono(null);
-            //             count--;
-            //         } else {
-            //             System.out.println("Este assento não é seu");
-            //         }
-            //     } catch (Exception ex) {
-            //         count = 0;
-            //     }
-            // }
 
+            // pede qual ele quer cancelar
+            int count = control.size();
+            while (count > 0) {
+                System.out.println("Informe qual assento deseja cancelar ou 'n' para sair:");
+                try {
+                    int numero = Integer.parseInt(teclado.nextLine());
+                    if (control.contains(numero)) {
+                        assentos[numero].setStatus(Status.LIVRE);
+                        assentos[numero].setDono(null);
+                        count--;
+                    } else {
+                        System.out.println("Este assento não é seu");
+                    }
+                } catch (Exception ex) {
+                    count = 0;
+                }
+            }   
+            
             // salva arquivo
-            salvar(file, assentos);
+            if(control.size()==0){
+                System.out.println("Voce ainda não possui reservas");
+            }else if(salvar(file, assentos)){
+                System.out.println("cancelado com sucesso");
+            }
 
         }
 
     }
 
-
-    public void salvar(File file, Assento[] assentos){
+    public boolean salvar(File file, Assento[] assentos) {
         for (int i = 0; i < assentos.length; i++) {
             obj[i] = assentos[i];
         }
 
         Utils.salvaDados(obj, file);
-        System.out.println("Reservado com Sucesso");
+        return true;
     }
 
     public void relatorio() {
