@@ -32,7 +32,7 @@ public class menu_onibus {
                             + "                                                                          0 - Sair do Sistema \n"
                             + "                                                                         1 - Cadastrar Usuario\n"
                             + "                                                                         2 - Listar Usuarios\n"
-                            +"                                                                          3 - Gerar Relatório de vendas\n"
+                            +"                                                                         3 - Gerar Relatório de vendas\n"
                             + "                                                                         4 - Linha Biopark/Toledo\n"
                             + "                                                                         5 - Linha Toledo/Cascavel\n"
                             + "*******************************************************************************************************************************************************************************\n");
@@ -93,11 +93,11 @@ public class menu_onibus {
                     return;
                 case 1:
                     limpaConsole();
-                    onibus.verAssentosDisponiveis();
+                    onibus.verAssentosDisponiveis(linha);
                     break;
                 case 2:
                     limpaConsole();
-                    onibus.reservarAssento();
+                    onibus.reservarAssento(linha);
                     break;
                 case 3:
                     limpaConsole();
@@ -105,10 +105,12 @@ public class menu_onibus {
                     break;
                 case 4:
                     limpaConsole();
-                    onibus.cancelarReserva();
+                    onibus.cancelarReserva(linha);
                 default:
                     return;
             }
+
+            Thread.sleep(1000);
         }
     }
 
