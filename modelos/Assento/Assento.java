@@ -18,7 +18,7 @@ public class Assento implements Serializable {
 
     public Assento(int numero) {
         this.numero = numero;
-        this.status = Status.LIVRE;
+        this.status = Status.OCUPADO;
         this.dono = null;
     }
 

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import modelos.Assento.Assento;
 import modelos.Usuario.Usuario;
@@ -33,7 +35,7 @@ public class Utils {
         }
     }
 
-    public static void leArquivoUsuarios(Usuario[] array, File file) {
+    public static void leArquivoUsuarios(List<Usuario> usuarios, File file) {
         /**
          * Lê um arquivo de objetos e os transcreve para um array de objetos do tipo Usuário.
          * @param array : um array de objetos do tipo Usuário
@@ -43,8 +45,8 @@ public class Utils {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            for (int i = 0; i < array.length; i++) {
-                array[i] = (Usuario) objectInputStream.readObject();
+            for (int i = 0; i < usuarios.size(); i++) {
+                usuarios.add((Usuario) objectInputStream.readObject());
             }
 
             objectInputStream.close();
@@ -75,5 +77,23 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static Usuario confereSeUsuExiste(String cpf){
+        /*
+         * recebe cpf como parametro
+         * return um objeto se usuario existe
+         * return null se usuario nao existe
+         */
+        File file_usu = new File("usuarios.txt");
+        ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+        Utils.leArquivoUsuarios(usuarios, file_usu);
+        for (Usuario usuario : usuarios) {
+            if(usuario.getCpf().equals(cpf)){
+                return usuario;
+            }
+        } 
+        return null;
     }
 }
