@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modelos.Assento.Assento;
+import modelos.Usuario.Relatorio;
 import modelos.Usuario.Usuario;
 
 public class Utils {
@@ -43,6 +44,7 @@ public class Utils {
          * @param file : um arquivo do tipo File
          */
         try {
+            usuarios.clear();
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             boolean control = true;
@@ -84,6 +86,24 @@ public class Utils {
 
             for (int i = 0; i < array.length; i++) {
                 array[i] = (Assento) objectInputStream.readObject();
+            }
+
+            objectInputStream.close();
+            fileInputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void leArquivoRelatorio(Relatorio[] array, File file){
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            for (int i = 0; i < array.length; i++) {
+                array[i] = (Relatorio) objectInputStream.readObject();
             }
 
             objectInputStream.close();
