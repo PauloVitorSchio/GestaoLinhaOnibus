@@ -109,6 +109,7 @@ public class menu_onibus {
                 case 4:
                     limpaConsole();
                     onibus.cancelarReserva(linha);
+                    break;
                 default:
                     return;
             }

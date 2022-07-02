@@ -48,13 +48,17 @@ public class Onibus implements Serializable {
 
         int index = -1;
         int aux = 0;
-        System.out.println("\n");
+        System.out.println();
         System.out.println("---------------------------------------");
         for (int i = 0; i < 5; i++) {
+            // Configura a listagem de assentos em formato de fileira de ônibus.
+            // São 4 fileiras e um corredor, totalizando 5.
             if (i != 2) {
+                // i == 2 representa o index do corredor, portanto não deve haver cadeiras ali.
                 index++;
                 aux = index;
                 for (int j = 0; j < 5; j++) {
+                    // Seta a cor de acordo com o status do assento.
                     if (assentos[aux].getStatus() == Status.LIVRE) {
                         ANSI = ANSI_GREEN;
                     } else if (assentos[aux].getStatus() == Status.OCUPADO) {
@@ -67,9 +71,9 @@ public class Onibus implements Serializable {
                             + ANSI_RESET + " |");
                     aux = aux + 4;
                 }
-                System.out.println("");
+                System.out.println();
             } else {
-                System.out.println("\n");
+                System.out.println();
             }
         }
         System.out.println("---------------------------------------");
@@ -85,7 +89,7 @@ public class Onibus implements Serializable {
         Assento[] assentos = new Assento[20];
         Utils.leArquivoAssentos(assentos, file);
 
-        if (((numero >= 0) && (numero < 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
+        if (((numero >= 0) && (numero <= 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
             // checa se o cliente esta cadastrado
             System.out.println("Digite o cpf do cliente: ");
             cpf = teclado.nextLine();
@@ -128,27 +132,24 @@ public class Onibus implements Serializable {
             // pede qual ele quer cancelar
             int count = control.size();
             while (count > 0) {
-                System.out.println("Informe qual assento deseja cancelar ou 'n' para sair:");
-                try {
+                System.out.println("Informe qual assento deseja cancelar:");
                     int numero = Integer.parseInt(teclado.nextLine());
                     if (control.contains(numero)) {
                         count_cancelar++;
                         assentos[numero].setStatus(Status.LIVRE);
                         assentos[numero].setDono(null);
                         count--;
+                        System.out.println("Cancelado com sucesso");
                     } else {
-                        System.out.println("Este assento não é seu");
+                        System.out.println("Este assento não é seu.");
+                        count = 0;
                     }
-                } catch (Exception ex) {
-                    count = 0;
-                }
             }
 
             // salva arquivo
             if (control.size() == 0) {
                 System.out.println("Voce ainda não possui reservas");
             } else if (salvar(file, assentos)) {
-                System.out.println("cancelado com sucesso");
                 File file_cancela = new File("relatorio.txt");
                 Relatorio[] relatorio = new Relatorio[2];
 
@@ -162,7 +163,7 @@ public class Onibus implements Serializable {
     }
 
     public void comprarAssento(int linha) {
-        System.out.println("Digite cpf do cliente: ");
+        System.out.println("Digite CPF do cliente: ");
         cpf = teclado.nextLine();
         Usuario usuario = Utils.confereSeUsuarioExiste(cpf);
         if (usuario != null) {
@@ -170,11 +171,10 @@ public class Onibus implements Serializable {
             Assento[] assentos = new Assento[20];
             List<Integer> control = Controla_Reserva(assentos, file, cpf);
             if (control.size() > 0) {
-                System.out.println("seus assentos");
+                System.out.println("Seus assentos");
                 int opc;
                 System.out.println("Digite 1 para comprar novo assento ou 2 para comprar assento reservado: ");
                 opc = Integer.parseInt(teclado.nextLine());
-
                 switch (opc) {
                     case 1:
                         comprar_livre(linha, usuario);
@@ -182,9 +182,8 @@ public class Onibus implements Serializable {
                     case 2:
                         comprar_reservada(control, linha, usuario);
                         break;
-
                     default:
-                        break;
+                        return;
                 }
             } else {
                 comprar_livre(linha, usuario);
@@ -202,11 +201,11 @@ public class Onibus implements Serializable {
         Assento[] assentos = new Assento[20];
         Utils.leArquivoAssentos(assentos, file);
 
-        if (((numero >= 0) && (numero < 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
+        if (((numero >= 0) && (numero <= 19)) && (assentos[numero].getStatus() == Status.LIVRE)) {
             assentos[numero].setStatus(Status.OCUPADO);
             assentos[numero].setDono(usuario);
+            System.out.println("Comprado com sucesso");
             if (salvar(file, assentos)) {
-                System.out.println("Comprado com sucesso");
                 File file_comprar = new File("relatorio.txt");
                 Relatorio[] relatorio = new Relatorio[2];
 
@@ -264,7 +263,6 @@ public class Onibus implements Serializable {
                     System.out.println(assento.getNumero());
                     control.add(assento.getNumero());
                 }
-
             }
         }
         return control;
