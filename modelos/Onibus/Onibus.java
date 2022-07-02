@@ -274,7 +274,11 @@ public class Onibus implements Serializable {
 
         Utils.leArquivoRelatorio(array, file);
         for (Relatorio relatorio : array) {
-            System.out.println("Linha: "+relatorio.getLinha());
+            if (relatorio.getLinha() == 1) {
+                System.out.println("Linha: Biopark/Toledo");
+            } else {
+                System.out.println("Linha: Toledo/Cascavel");
+            }
             System.out.println("Cancelados: "+relatorio.getCount_cancelados());
             System.out.println("Comprados: "+relatorio.getCount_comprados());
             System.out.println("Reservados: "+relatorio.getCount_reservados());
